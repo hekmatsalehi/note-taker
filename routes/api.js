@@ -2,13 +2,11 @@ const router = require("express").Router();
 let data = require('../db/db.json')
 const fs = require('fs');
 
-
+// Shows the existed notes
+router.get('/api/notes', (req, res) => res.json(data))
+    
 currentId = data.length;
-
-router.get('/api/notes', (req, res) => {
-    return res.json(data);
-});
-
+// Add new notes
 router.post('/api/notes', (req, res) => {
     const newData = req.body;
 
@@ -20,20 +18,13 @@ router.post('/api/notes', (req, res) => {
     return res.status(200).end();
 });
 
+// Delete the selected note
 router.delete('/api/notes/:id', (req, res) => {
     res.send('Delete request recieved!')
     const id = req.params.id;
-
-    const idLess = data.filter((less) => {
-        return less.id < id;
-    });
-
-    const idGreater = data.filter((greater) => {
-        return greater.id > id;
-    });
-
-    data = idLess.concat(idGreater);
-
+    const smallId = data.filter((small) => small.id < id);    
+    const bigId = data.filter((big) => big.id > id);
+    data = smallId.concat(bigId);
     generateNotes();
 })
 
